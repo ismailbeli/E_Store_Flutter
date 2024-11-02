@@ -1,6 +1,9 @@
 import 'package:estore_flutter/db/dbHelper.dart';
 import 'package:estore_flutter/models/product.dart';
+import 'package:estore_flutter/screens/productDetail.dart';
 import 'package:flutter/material.dart';
+
+import 'addProduct.dart';
 
 class ProductList extends StatefulWidget {
   @override
@@ -21,6 +24,13 @@ class ProductListState extends State<ProductList> {
     }
     return Scaffold(
       body: productList(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        tooltip: "Add new product",
+        onPressed: (){
+          navigateToAddProduct();
+        },
+      ),
     );
   }
 
@@ -29,16 +39,18 @@ class ProductListState extends State<ProductList> {
         itemCount: countOfProduct,
         itemBuilder: (BuildContext context, int position) {
           return Card(
-            color: Colors.cyan,
+            color: Colors.grey,
             elevation: 2.0,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Colors.redAccent,
                 child: Text("ES"),
               ),
               title: Text(this.products[position].name),
               subtitle: Text(this.products[position].description),
-              onTap: () {},
+              onTap: () {
+                navigateToDetail(this.products[position]);
+              },
             ),
           );
         });
@@ -61,5 +73,22 @@ class ProductListState extends State<ProductList> {
         });
       });
     });
+  }
+
+  void navigateToDetail(Product product) async{
+    bool sonuc = Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetail(product))) as bool;
+    if(sonuc != null){
+      if(sonuc){
+        getProducts();
+      }
+    }
+  }
+  void navigateToAddProduct() async{
+    bool sonuc = Navigator.push(context, MaterialPageRoute(builder: (context) => AddProduct())) as bool;
+    if(sonuc != null){
+      if(sonuc){
+        getProducts();
+      }
+    }
   }
 }
